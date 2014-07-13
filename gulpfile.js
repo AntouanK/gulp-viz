@@ -13,6 +13,7 @@
 var exec          = require('child_process').exec,
     es            = require('event-stream'),
     Q             = require('q'),
+    browserify    = require('browserify'),
     gulp          = require('gulp'),
     gulpUtil      = require('gulp-util'),
     log           = require('consologger'),
@@ -75,7 +76,7 @@ thirdPartyCss = [
   path.join( paths.thirdParty, 'style' ) + '/**/*.css'
 ],
 lessFiles = [
-  paths.styles + '/**/*.less'
+  paths.style + '/**/*.less'
 ],
 thirdPartyJs = [
   paths.thirdPartyScripts + '/react-0.10.0.js',
@@ -86,9 +87,10 @@ thirdPartyJsMin = [
   paths.thirdPartyScripts + '/d3.min.js'
 ],
 jsFiles = [
-  paths.scripts + '/main.js',
-  paths.scripts + '/**/*.js'
-];
+  paths.script + '/main.js',
+  paths.script + '/**/*.js'
+],
+entryScript = path.join(path.resolve(paths.script), 'app.js');
 
 
 /**********************************************************/
@@ -186,7 +188,7 @@ gulp.task('styles', function(taskDone){
     .pipe( concat('thirdParty.css') ),
 
     //  process the LESS files
-    gulp.src(paths.styles + '/main.less')
+    gulp.src(paths.style + '/main.less')
     .pipe( less() )
   )
   .pipe( order([
@@ -244,39 +246,55 @@ gulp.task('load-third-party-scripts', function(taskDone){
 gulp.task('load-our-js', function(taskDone){
 
   //  read our js code
-  gulp.src(jsFiles)
-  .pipe( eslint({ config: '.eslintrc' }) )
-  .pipe( eslint.format() )
-  .pipe( size({showFiles: true}) )
-  //  minify if not in develop
-  .pipe( gulpif(getEnv() !== 'develop', uglify()) )
-  .pipe( concat('our.js') )
-  .pipe( tap(function(file){
-    assets.our_js = file.contents.toString();
-  }) )
-  .on('end',function(){
-    taskDone();
-  });
+  // gulp.src(jsFiles)
+  // .pipe( eslint({ config: '.eslintrc' }) )
+  // .pipe( eslint.format() )
+  // .pipe( size({showFiles: true}) )
+  // //  minify if not in develop
+  // .pipe( gulpif(getEnv() !== 'develop', uglify()) )
+  // .pipe( concat('our.js') )
+  // .pipe( tap(function(file){
+  //   assets.our_js = file.contents.toString();
+  // }) )
+  // .on('end',function(){
+  //   taskDone();
+  // });
+
+  // ------ browserify
+  // browserify(entryScript)
+  // .bundle()
+  // .pipe( tap(function(file){
+  //   log.data(file);
+  //   assets.our_js = file.toString();
+  //   log.data(assets.our_js);
+  // }) )
+  // .on('end', function(){
+  //   taskDone();
+  // });
 
 });
 
 //  process and copy script files
 gulp.task('write-scripts', function(taskDone){
+  //
+  // var stream = source('complete.js'),
+  //     file_contents = assets.our_js;
+  //
+  // // log.data(file_contents);
+  //
+  // stream.write(file_contents);
+  //
+  // process.nextTick(function(){
+  //   stream.end();
+  // });
+  //
+  // stream
+  // .pipe( vinylBuffer() )
+  // .pipe( tap(function(file){ log.info( 'complete.js :', file.contents.length/1024 ); }) )
 
-  var stream = source('complete.js'),
-      file_contents =
-        assets.thirdParty_js + '\n' +
-        assets.our_js;
-
-  stream.write(file_contents);
-
-  process.nextTick(function(){
-    stream.end();
-  });
-
-  stream
-  .pipe( vinylBuffer() )
-  .pipe( tap(function(file){ log.info( 'complete.js :', file.contents.length/1024 ); }) )
+  browserify(entryScript)
+  .bundle()
+  .pipe( source('complete.js') )
   .pipe( gulp.dest(paths.deploy) )
   .on('end', function(){
     taskDone();
@@ -401,7 +419,7 @@ gulp.task('dev', function(taskDone){
 
   runSequence(
     preparationTasks,
-    ['load-third-party-scripts', 'load-our-js'],
+    // ['load-third-party-scripts', 'load-our-js'],
     ['read-index-html', 'styles', 'root-files', 'image-files'],
     ['inline-css', 'write-index-html', 'write-scripts'],
     'karma-test',
@@ -416,7 +434,7 @@ gulp.task('staging', function(taskDone){
 
   runSequence(
     preparationTasks,
-    ['load-third-party-scripts', 'load-our-js'],
+    // ['load-third-party-scripts', 'load-our-js'],
     ['read-index-html', 'styles', 'root-files', 'image-files'],
     ['inline-css', 'write-index-html', 'write-scripts'],
     taskDone

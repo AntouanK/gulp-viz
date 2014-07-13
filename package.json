@@ -21,7 +21,9 @@
   },
   "homepage": "https://github.com/AntouanK/gulp-viz",
   "dependencies": {
+    "browserify": "^4.2.0",
     "consologger": "^0.1.41",
+    "d3": "^3.4.10",
     "event-stream": "^3.1.5",
     "gulp": "^3.8.6",
     "gulp-concat": "^2.3.3",
@@ -44,6 +46,7 @@
     "karma-phantomjs-launcher": "^0.1.4",
     "path": "^0.4.9",
     "q": "^1.0.1",
+    "react": "^0.10.0",
     "rimraf": "^2.2.8",
     "run-sequence": "^0.3.6",
     "vinyl-buffer": "0.0.0",
