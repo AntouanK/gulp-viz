@@ -10,5 +10,5 @@ cache:
     - node_modules
 
 # run gulp
-after_script:
-  - gulp production
+before_script:
+  - gulp staging
