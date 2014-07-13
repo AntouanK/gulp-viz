@@ -1,0 +1,14 @@
+
+# set JS environment
+language: node_js
+node_js:
+  - "0.10"
+
+# cache npm packages
+cache:
+  directories:
+    - node_modules
+
+# run gulp
+after_script:
+  - gulp production
