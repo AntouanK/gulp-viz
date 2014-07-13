@@ -1,0 +1,52 @@
+{
+  "name": "gulp-viz",
+  "version": "0.1.0",
+  "description": "A visualization web-app for profiling gulp tasks and plugins.",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/karma/bin/karma start karma.conf.js --single-run --browsers PhantomJS"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AntouanK/gulp-viz.git"
+  },
+  "keywords": [
+    "gulp-viz",
+    "gulp-visualization"
+  ],
+  "author": "Antonis Karamitros",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AntouanK/gulp-viz/issues"
+  },
+  "homepage": "https://github.com/AntouanK/gulp-viz",
+  "dependencies": {
+    "consologger": "^0.1.41",
+    "event-stream": "^3.1.5",
+    "gulp": "^3.8.6",
+    "gulp-concat": "^2.3.3",
+    "gulp-eslint": "^0.1.8",
+    "gulp-gzip": "0.0.8",
+    "gulp-if": "^1.2.2",
+    "gulp-less": "^1.3.1",
+    "gulp-minify-css": "^0.3.6",
+    "gulp-minify-html": "^0.1.4",
+    "gulp-order": "^1.1.1",
+    "gulp-size": "^0.4.0",
+    "gulp-tap": "^0.1.1",
+    "gulp-uglify": "^0.3.1",
+    "gulp-util": "^2.2.20",
+    "gulp-wrapper": "^0.1.42",
+    "karma": "^0.12.17",
+    "karma-chrome-launcher": "^0.1.4",
+    "karma-jasmine": "^0.1.5",
+    "karma-mocha-reporter": "^0.2.8",
+    "karma-phantomjs-launcher": "^0.1.4",
+    "path": "^0.4.9",
+    "q": "^1.0.1",
+    "rimraf": "^2.2.8",
+    "run-sequence": "^0.3.6",
+    "vinyl-buffer": "0.0.0",
+    "vinyl-source-stream": "^0.1.1"
+  }
+}
