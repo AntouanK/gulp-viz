@@ -15,6 +15,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
+      'test/es5-shim.js',  //  React needs Function.prototype.bind, PhantomJS doesn't have it
       'deploy/complete.js',
       // 'deploy/partials/templates.html',
       'src/html/index.html',
@@ -55,7 +56,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Chrome'/*, 'Firefox'*/],
+    browsers: ['PhantomJS'/*, 'Firefox'*/],
 
 
     // Continuous Integration mode
