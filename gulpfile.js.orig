@@ -90,8 +90,12 @@ thirdPartyJsMin = [
 jsFiles = [
   paths.script + '/main.js',
   paths.script + '/**/*.js'
+<<<<<<< HEAD
+];
+=======
 ],
 entryScript = path.join(path.resolve(paths.script), 'app.react.js');
+>>>>>>> browserify-me
 
 
 /**********************************************************/
