@@ -2,5 +2,9 @@
 
 describe("loading tests suite", function() {
 
-  expect(null).toBeNull();
+  it('should have a window', function() {
+    expect(window).toBeDefined();
+  });
+
+
 });

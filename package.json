@@ -47,6 +47,7 @@
     "path": "^0.4.9",
     "q": "^1.0.1",
     "react": "^0.10.0",
+    "reactify": "^0.13.1",
     "rimraf": "^2.2.8",
     "run-sequence": "^0.3.6",
     "vinyl-buffer": "0.0.0",

@@ -14,6 +14,7 @@ var exec          = require('child_process').exec,
     es            = require('event-stream'),
     Q             = require('q'),
     browserify    = require('browserify'),
+    reactify      = require('reactify'),
     gulp          = require('gulp'),
     gulpUtil      = require('gulp-util'),
     log           = require('consologger'),
@@ -90,7 +91,7 @@ jsFiles = [
   paths.script + '/main.js',
   paths.script + '/**/*.js'
 ],
-entryScript = path.join(path.resolve(paths.script), 'app.js');
+entryScript = path.join(path.resolve(paths.script), 'app.react.js');
 
 
 /**********************************************************/
@@ -293,6 +294,7 @@ gulp.task('write-scripts', function(taskDone){
   // .pipe( tap(function(file){ log.info( 'complete.js :', file.contents.length/1024 ); }) )
 
   browserify(entryScript)
+  .transform(reactify)
   .bundle()
   .pipe( source('complete.js') )
   .pipe( gulp.dest(paths.deploy) )
@@ -422,7 +424,7 @@ gulp.task('dev', function(taskDone){
     // ['load-third-party-scripts', 'load-our-js'],
     ['read-index-html', 'styles', 'root-files', 'image-files'],
     ['inline-css', 'write-index-html', 'write-scripts'],
-    'karma-test',
+    // 'karma-test',
     taskDone
   );
 });
