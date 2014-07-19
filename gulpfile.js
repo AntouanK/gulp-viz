@@ -243,60 +243,25 @@ gulp.task('load-third-party-scripts', function(taskDone){
 
 });
 
+gulp.task('lint-our-scripts', function(taskDone){
 
-gulp.task('load-our-js', function(taskDone){
-
-  //  read our js code
-  // gulp.src(jsFiles)
-  // .pipe( eslint({ config: '.eslintrc' }) )
-  // .pipe( eslint.format() )
-  // .pipe( size({showFiles: true}) )
-  // //  minify if not in develop
-  // .pipe( gulpif(getEnv() !== 'develop', uglify()) )
-  // .pipe( concat('our.js') )
-  // .pipe( tap(function(file){
-  //   assets.our_js = file.contents.toString();
-  // }) )
-  // .on('end',function(){
-  //   taskDone();
-  // });
-
-  // ------ browserify
-  // browserify(entryScript)
-  // .bundle()
-  // .pipe( tap(function(file){
-  //   log.data(file);
-  //   assets.our_js = file.toString();
-  //   log.data(assets.our_js);
-  // }) )
-  // .on('end', function(){
-  //   taskDone();
-  // });
-
+  gulp.src(jsFiles)
+  .pipe( eslint() )
+  .pipe( eslint.format() )
+  .on('end', function(){
+  
+    taskDone();
+  });
 });
 
 //  process and copy script files
 gulp.task('write-scripts', function(taskDone){
-  //
-  // var stream = source('complete.js'),
-  //     file_contents = assets.our_js;
-  //
-  // // log.data(file_contents);
-  //
-  // stream.write(file_contents);
-  //
-  // process.nextTick(function(){
-  //   stream.end();
-  // });
-  //
-  // stream
-  // .pipe( vinylBuffer() )
-  // .pipe( tap(function(file){ log.info( 'complete.js :', file.contents.length/1024 ); }) )
 
   browserify(entryScript)
   .transform(reactify)
   .bundle()
   .pipe( source('complete.js') )
+  .pipe( gulpif(getEnv() !== 'develop', uglify()) )
   .pipe( gulp.dest(paths.deploy) )
   .on('end', function(){
     taskDone();
@@ -363,22 +328,10 @@ gulp.task('write-index-html', function(){
 gulp.task('root-files', function(taskDone){
 
   gulp.src(paths.src + '/*.*')
-  .pipe( gzip({ append: false }) )
   .pipe( gulp.dest(paths.deploy) )
-    .on('end',function(){
+  .on('end',function(){
     taskDone();
   });
-
-});
-
-//  copy all image files
-gulp.task('image-files', function(taskDone){
-
-  gulp.src(paths.src + '/images/**/*.*')
-      .pipe( gulp.dest(paths.deploy + '/images') )
-      .on('end',function(){
-          taskDone();
-      });
 
 });
 
@@ -421,8 +374,7 @@ gulp.task('dev', function(taskDone){
 
   runSequence(
     preparationTasks,
-    // ['load-third-party-scripts', 'load-our-js'],
-    ['read-index-html', 'styles', 'root-files', 'image-files'],
+    ['read-index-html', 'styles', 'root-files'],
     ['inline-css', 'write-index-html', 'write-scripts'],
     // 'karma-test',
     taskDone
@@ -436,8 +388,7 @@ gulp.task('staging', function(taskDone){
 
   runSequence(
     preparationTasks,
-    // ['load-third-party-scripts', 'load-our-js'],
-    ['read-index-html', 'styles', 'root-files', 'image-files'],
+    ['read-index-html', 'styles', 'root-files'],
     ['inline-css', 'write-index-html', 'write-scripts'],
     taskDone
   );
@@ -460,17 +411,9 @@ gulp.task('watch', function(){
   gulp.watch([thirdPartyCss, lessFiles], ['rebuild-style']);
 
   //  watch scripts
-  gulp.watch([thirdPartyJs], function(){
-    runSequence(
-      ['load-third-party-scripts'],
-      ['write-scripts']
-    );
-  });
-
   gulp.watch([jsFiles], function(){
     runSequence(
-      ['load-our-js'],
-      ['write-scripts']
+      'write-scripts'
     );
   });
 

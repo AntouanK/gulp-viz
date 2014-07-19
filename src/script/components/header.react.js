@@ -1,39 +1,65 @@
-/**
- * @jsx React.DOM
+/*** @jsx React.DOM
  */
 
+'use strict';
 
+//  require react
 var React = require('react');
+//  require the available actions
+var AppActions = require('../actions/app-actions.js');
 
-var Header = React.createClass({
-  propTypes: {
-    options: ReactPropTypes.object.isRequired
-  },
+var ViewLink = React.createClass({
 
-  componentDidMount: function() {
-    TodoStore.addChangeListener(this._onChange);
-    console.log('componentDidMount');
-  },
-
-  componentWillUnmount: function() {
-    TodoStore.removeChangeListener(this._onChange);
-    console.log('componentDidMount');
+  handleClick: function(ev){
+    AppActions.setView({
+      viewName: this.props.viewName
+    });
   },
 
   render: function(){
+  
     return (
-      <div>
-        <ul>
-          <li>option 1</li>
-          <li>option 2</li>
-        </ul>
-      </div>
+      <a onClick={this.handleClick}>{this.props.label}</a>
     );
+  }
+});
+
+var Header = React.createClass({
+
+  propTypes: {
+    views: React.PropTypes.array.isRequired
   },
 
-  _onChange: function() {
-    this.setState(getTodoState());
-    console.log('_onChange');
+  componentDidMount: function() {
+    // TodoStore.addChangeListener(this._onChange);
+    // console.log('componentDidMount');
+  },
+
+  componentWillUnmount: function() {
+    // TodoStore.removeChangeListener(this._onChange);
+    // console.log('componentDidMount');
+  },
+
+  render: function(){
+    var views = this.props.views;
+    var thisHeader = this;
+
+    return (
+      <nav className="top-bar">
+        <section className="top-bar-section">
+          <div className="logo" />
+          <ul className="right">
+            {Object.keys(views).map(function(key){
+              return (
+                <li>
+                  <ViewLink viewName={views[key].name} label={views[key].label} />
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      </nav>
+    );
   }
 });
 

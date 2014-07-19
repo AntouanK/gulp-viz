@@ -2,55 +2,54 @@
  * @jsx React.DOM
  */
 
+'use strict';
+
 /**
  * This component operates as a "Controller-View".  It listens for changes in
  * the TodoStore and passes the new data to its children.
  */
 
-var React = require('react');
-var Header = require('./Header.react');
+var React         = require('react'),
+    AppStore      = require('../stores/app-store'),
+    Header        = require('./Header.react'),
+    View          = require('./View.react'),
+    VizApp;
 
-/**
- * Retrieve the current TODO data from the TodoStore
- */
-function getVizState() {
-  return {
-    options: ['option 1', 'option 21']
-  };
-}
 
-var VizApp = React.createClass({
+VizApp = React.createClass({
 
-  getInitialState: function() {
-    return getVizState();
-  },
+  getInitialState: function() { 
+    return {
+      activeView: AppStore.getActiveView()
+    };
+  }, 
 
-  componentDidMount: function() {
-    TodoStore.addChangeListener(this._onChange);
-  },
+  componentDidMount: function() { 
+    AppStore.addChangeListener(this._onChange); 
+  }, 
 
-  componentWillUnmount: function() {
-    TodoStore.removeChangeListener(this._onChange);
-  },
+  componentWillUnmount: function() { 
+    AppStore.removeChangeListener(this._onChange); 
+  }, 
 
   /**
    * @return {object}
    */
   render: function() {
-  	return (
-      <div>
-        <Header options={this.state.options} />
-      </div>
-  	);
+    console.log('VizApp.render()');
+    return (
+      <section>
+        <Header views={AppStore.getViews()} />
+        <View view={this.state.activeView} />
+      </section>
+    );
   },
 
-  /**
-   * Event handler for 'change' events coming from the TodoStore
-   */
-  _onChange: function() {
-    this.setState(getVizState());
+  _onChange:function(){
+    this.setState({
+      activeView: AppStore.getActiveView()
+    });
   }
-
 });
 
 module.exports = VizApp;
