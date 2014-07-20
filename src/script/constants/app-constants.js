@@ -7,5 +7,6 @@ module.exports = {
   view: {
     landing: 'view_landing',
     session: 'view_session'
-  }
+  },
+  set_session: 'set_session'
 };

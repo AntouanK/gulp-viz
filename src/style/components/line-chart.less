@@ -5,15 +5,24 @@
   min-height: 600px;
 
   text {
-    fill: @blue-grey-light;
-    transform: rotate(90deg);
-    -webkit-transform: rotate(90deg);
+    // fill: @blue-grey-light;
+    // transform: rotate(90deg);
+    // -webkit-transform: rotate(90deg);
     font-size: 10px;
   }
 
   .node rect {
     fill: @blue-grey-light;
     shape-rendering: crispEdges;
+  }
+
+  //  axis
+  path {
+    stroke: @blue-grey-light;
+  }
+
+  .tick text {
+    fill: @blue-grey-light;
   }
 
 }

@@ -1,3 +1,5 @@
+/* app-store.js */
+
 'use strict';
 
 var AppDispatcher = require('../dispatchers/app-dispatcher'),
@@ -5,7 +7,7 @@ var AppDispatcher = require('../dispatchers/app-dispatcher'),
     AppStore,
     merge = require('react/lib/merge'),
     EventEmitter = require('events').EventEmitter,
-    CHANGE_EVENT = "change",
+    CHANGE_EVENT = 'change',
     _views,
     _activeViewIndex = 0,
     _getActiveView,
@@ -83,6 +85,6 @@ AppStore = merge(EventEmitter.prototype, {
 
     return true;
   })
-})
+});
 
 module.exports = AppStore;

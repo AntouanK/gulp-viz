@@ -1,3 +1,5 @@
+/* app-dispatcher.js */
+
 var Dispatcher = require('./Dispatcher');
 
 var merge = require('react/lib/merge');

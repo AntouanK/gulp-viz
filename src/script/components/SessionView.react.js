@@ -1,22 +1,20 @@
 /*** @jsx React.DOM
  */
 
+/* SessionView.react.js */
+
+//  target graph ----> http://bl.ocks.org/mbostock/1093025
+
 'use strict';
-
-
-//  taret graph ----> http://bl.ocks.org/mbostock/1093025
-
 
 //  require react
 var React        = require('react'),
-    d3           = require('d3'),
-    Mocks        = require('../_mocks'),
     AppConstants = require('../constants/app-constants'),
+    BoxChart     = require('../components/BoxChart.react'),
     views,
     SessionView;
 
-console.log(Mocks);
-
+//  helper functions
 var timeStampToFloat = function(array){
 
   var timeZero = ( (array[0]*1000000)+parseInt(array[1] / 1000, 10) );
@@ -33,107 +31,60 @@ var timeStampToFloat = function(array){
   return 0;
 };
 
-var getDataSet = function(){
+var getDataSet = function(sessionData){
 
-  var dataset = [];
+  var dataset = {};
 
-  // dataset.push({
-  //   label: 'timeZero',
-  //   type: 'timeZero',
-  //   timeStamp: timeStampToFloat(Mocks.session001.timeZero)
-  // });
-
-  Object.keys(Mocks.session001.list)
+  Object.keys(sessionData.list)
   .forEach(function(key){
   
-    var event = Mocks.session001.list[key],
-        newItem = {
-          label: event.name,
-          type: event.type,
-          timestamp: timeStampToFloat(event.timestamp)
+    var thisEvent = sessionData.list[key],
+        newEvent = {
+          id:           thisEvent.id,
+          eventIndex:   thisEvent.eventIndex,
+          label:        thisEvent.name,
+          type:         thisEvent.type,
+          timestamp:    timeStampToFloat(thisEvent.timestamp)
         };
 
-    dataset.push(newItem);
+    if(dataset[thisEvent.id] === undefined){
+      dataset[thisEvent.id] = {
+        events: []
+      };
+    }
+
+    dataset[thisEvent.id].events.push(newEvent);
+
+    if(dataset[thisEvent.id].events.length > 1){
+      //  set max min times
+      dataset[thisEvent.id].minTime = 
+      Math.min(dataset[thisEvent.id].minTime, newEvent.timestamp);
+
+      dataset[thisEvent.id].maxTime = 
+      Math.max(dataset[thisEvent.id].maxTime, newEvent.timestamp);
+      
+    } else {
+      dataset[thisEvent.id].minTime = newEvent.timestamp;
+      dataset[thisEvent.id].maxTime = newEvent.timestamp;
+    }
+
+
   });
 
   return dataset;
 };
 
-var LineChart = React.createClass({
-
-  componentDidMount: function(){
-
-    var thisEle = this.getDOMNode();
-    var dataset = getDataSet();
-    console.log(dataset);
-    var availHeight = 150;
-    var transitionDuration = 500;
-    var transitionDelay = 100;
-
-    var dataMaxValue = 
-      d3.max( dataset, function(d) { return d.timestamp; });
-  
-    var x = d3.scale.linear().domain([0, dataset.length]).range([ 0, thisEle.offsetWidth ]);
-    var y = d3.scale.linear().domain([0, dataMaxValue]).range([ availHeight, 0 ]);
-
-    // offset
-    // var graph = 
-    // d3.select('body')
-    //   .append( 'g' )
-    //   .data(dataset)
-    // .enter()
-    //   .append('g')
-    //   .attr('class', 'node');
-      // .transition()
-      // .duration(    function( d,i ){ return transitionDuration })
-      // .delay(       function( d,i ){ return transitionDelay })
-      // .attr( 'transform', 'translate(0, 0)' );
-
-    // scale the range of the data
-    // x.domain( [0, dataset.length - 1 ] );
-    // y.domain( [0, dataMaxValue ]);
-
-    // // draw the line
-    // var graphLine = graph.append( 'path' )
-    //   .attr( 'fill', 'green' )
-    //   .attr( 'stroke', 'white' )
-    //   .attr( 'd', valueline( dataset ));
-  },
-
-  render: function(){
-
-    var dataset      = getDataSet();
-    var availHeight  = 900;
-    var dataMaxValue = 
-      d3.max( dataset, function(d) { return d.timestamp; });
-    var x            = 
-      d3.scale.linear()
-      .domain([0, dataset.length]).range([ 0, 950 ]);
-    var y            = 
-      d3.scale.linear()
-      .domain([0, dataMaxValue]).range([ 0, availHeight ]);
-
-    return (
-      <svg className="line-chart">
-        <g>
-          {dataset.map(function(data, i){
-            return (
-              <g className="node" transform={"translate("+( x(i) )+",0)"}>
-                <rect x="5" height={ y(data.timestamp) } width="5"></rect>
-                <text dy="5.5" dx="2.5">dummy label</text>
-              </g>
-            );
-          })}
-        </g>
-      </svg>
-    );
-  }
-});
-
 
 SessionView = React.createClass({
 
+  componentWillMount: function(){
+  
+    console.log(this.props.session);
+    console.log(getDataSet(this.props.session));
+  },
+
   render: function(){
+    
 
     return (
       <div>
@@ -144,7 +95,7 @@ SessionView = React.createClass({
         </div>
         <div className="row">
           <div className="columns small-centered">
-            <LineChart />
+            <BoxChart dataset={getDataSet(this.props.session)} />
           </div>
         </div>
       </div>

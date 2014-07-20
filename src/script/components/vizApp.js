@@ -2,6 +2,8 @@
  * @jsx React.DOM
  */
 
+/* VizApp.js */
+
 'use strict';
 
 /**
