@@ -75,7 +75,7 @@ thirdPartyCss = [
   path.join( paths.thirdParty, 'style' ) + '/**/*.css'
 ],
 lessFiles = [
-  paths.styles + '/**/*.less'
+  paths.style + '/**/*.less'
 ],
 thirdPartyJs = [
   paths.thirdPartyScripts + '/react-0.10.0.js',
@@ -86,8 +86,8 @@ thirdPartyJsMin = [
   paths.thirdPartyScripts + '/d3.min.js'
 ],
 jsFiles = [
-  paths.scripts + '/main.js',
-  paths.scripts + '/**/*.js'
+  paths.script + '/main.js',
+  paths.script + '/**/*.js'
 ];
 
 
@@ -186,7 +186,7 @@ gulp.task('styles', function(taskDone){
     .pipe( concat('thirdParty.css') ),
 
     //  process the LESS files
-    gulp.src(paths.styles + '/main.less')
+    gulp.src(paths.style + '/main.less')
     .pipe( less() )
   )
   .pipe( order([
